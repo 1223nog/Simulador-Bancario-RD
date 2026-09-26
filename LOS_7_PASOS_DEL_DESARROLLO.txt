@@ -1,0 +1,86 @@
+LOS 7 PASOS DEL DESARROLLO DEL SOFTWARE
+Proyecto: Simulador Bancario de Cuota Fija con Historial y Facturación – República Dominicana
+
+
+1. Planificación y Análisis de Requisitos
+En esta etapa se identificó la necesidad de crear una herramienta educativa e informativa que permita a los usuarios comprender cómo se calcula una cuota fija de préstamo personal en República Dominicana, incluyendo elementos reales del sistema bancario local. Se investigó la realidad financiera del país: tasas de interés habituales (14%–22%), seguro de desgravamen (seguro de vida del préstamo), comisiones de apertura e ITBIS (18%). Se definió que el programa debía desarrollarse en lenguaje C++, con interfaz de consola a color, sistema de acceso por login, historial de simulaciones persistente en archivo, generación de factura profesional exportable a texto, tabla de amortización completa y manual de usuario con explicación de la fórmula matemática.
+
+
+2. Definición de Requisitos
+Se establecieron los requisitos funcionales del sistema:
+
+- Pantalla de bienvenida e inicio de sesión con validación de credenciales (usuario y contraseña) y límite de intentos.
+- Menú principal con las opciones: nueva simulación, ver historial, imprimir/exportar factura, manual de ayuda y salir.
+- Permitir ingresar datos del cliente (nombre y cédula) y del préstamo (monto, tasa anual, plazo en meses, seguro/desgravamen y comisión de apertura).
+- Calcular la cuota fija utilizando el sistema de amortización francés.
+- Aplicar automáticamente el ITBIS del 18% sobre la comisión de apertura.
+- Mostrar el desglose claro de: cuota mensual (capital + interés), seguro mensual, cuota total, total de intereses, total de seguro, comisión + ITBIS, total a pagar y monto neto a recibir.
+- Generar y mostrar la tabla de amortización completa mes a mes (opcional).
+- Generar una factura profesional en pantalla y exportarla a archivo de texto en la carpeta facturas/.
+- Guardar cada simulación en un archivo de historial (historial_prestamos.txt) para consulta posterior.
+- Incluir un manual de usuario con explicación detallada de la fórmula y notas específicas para República Dominicana.
+- Presentación clara, centrada, con colores y validaciones de datos para evitar errores.
+
+
+3. Diseño del sistema
+Se diseñó la estructura del programa utilizando:
+
+- Una estructura principal (struct Prestamo) para almacenar los datos del cliente, del préstamo, el resumen de cálculos y la tabla de amortización.
+- Estructuras auxiliares (struct Resumen y struct FilaAmortizacion) para organizar el desglose financiero y cada fila de la tabla.
+- Funciones separadas y modulares para: login, cálculo de cuota, generación de tabla de amortización, mostrar resultados, generar y exportar factura, cargar/guardar historial, mostrar manual y menú principal.
+- Menú principal sencillo e intuitivo con cinco opciones numeradas.
+- Validaciones de entrada para montos negativos, plazos inválidos, campos obligatorios vacíos y tipos de dato incorrectos.
+- Interfaz de consola centrada, con códigos de color ANSI (cyan, verde, amarillo, rojo) para mejorar la experiencia del usuario y resaltar información importante.
+- Persistencia de datos en archivo de texto delimitado por el carácter “|”, permitiendo recuperar simulaciones anteriores.
+
+
+4. Desarrollo (Codificación)
+Se programó el sistema completamente en lenguaje C++ (estándar C++17). Se implementó la fórmula de la cuota fija del sistema francés:
+
+    Cuota = P × [ r(1+r)^n ] / [ (1+r)^n − 1 ]
+
+Donde:
+    P = Monto del préstamo (capital)
+    r = Tasa de interés mensual (tasa anual / 100 / 12)
+    n = Plazo en meses
+
+Además se desarrollaron:
+- El sistema de autenticación (login) con tres intentos.
+- El cálculo automático del ITBIS (18%) sobre la comisión de apertura.
+- La generación completa de la tabla de amortización mes a mes (capital, interés, seguro, pago total y saldo restante).
+- La exportación de facturas a archivos .txt con formato profesional.
+- El almacenamiento y lectura del historial de simulaciones.
+- El manual de ayuda integrado con la explicación de la fórmula y notas para el contexto dominicano.
+- Validaciones robustas y una presentación visual con colores y títulos centrados.
+
+
+5. Pruebas
+Se realizaron pruebas con diferentes escenarios reales del mercado dominicano:
+
+- Préstamos de montos bajos (RD$ 50,000), medios (RD$ 200,000) y altos (RD$ 1,000,000).
+- Diferentes tasas de interés (14%, 16%, 18% y 22%).
+- Plazos de 12, 24, 36 y 60 meses.
+- Verificación de que los cálculos de cuota, intereses, seguro, ITBIS y total a pagar fueran correctos.
+- Pruebas de validación de datos incorrectos (valores negativos, cero en monto, texto en campos numéricos, campos vacíos).
+- Pruebas del sistema de login (credenciales correctas e incorrectas, agotamiento de intentos).
+- Pruebas de guardado y recuperación del historial.
+- Pruebas de generación y exportación de facturas a archivo de texto.
+- Verificación de la tabla de amortización (saldo final en cero y coherencia de capital + interés = cuota).
+
+
+6. Implementación / Despliegue
+El programa fue compilado con el compilador g++ (estándar C++17) y probado en entorno Linux. También es compatible con Windows (Dev-C++, Visual Studio o MinGW) y macOS. El código fuente se organiza en un único archivo modular (prestamo.cpp) junto con un Makefile para facilitar la compilación. El ejecutable y el código fuente pueden subirse a un repositorio en GitHub, cumpliendo así con el requisito de colocar el programa en un servidor online para que sea accesible desde internet. Al ejecutarse, el programa genera automáticamente la carpeta facturas/ y el archivo historial_prestamos.txt en el directorio de trabajo.
+
+
+7. Mantenimiento
+Se contempla la posibilidad de futuras mejoras, tales como:
+
+- Convertir el programa a una versión web (HTML/CSS/JavaScript o backend en C++ con API) para mayor accesibilidad.
+- Incluir más opciones de seguros (seguro de desempleo, seguro de vivienda, etc.).
+- Agregar exportación de factura a formato PDF.
+- Implementar búsqueda y filtros en el historial (por cliente, fecha o monto).
+- Mejorar la interfaz gráfica con una librería de GUI (por ejemplo Qt o wxWidgets).
+- Permitir múltiples usuarios con roles (administrador y consultor).
+- Integrar tasas de interés de referencia actualizadas desde una API bancaria.
+
+El código está organizado de forma modular (funciones independientes y estructuras claras) para facilitar cualquier modificación o ampliación futura sin afectar el resto del sistema.
